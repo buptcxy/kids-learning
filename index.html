@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>敦敦壮壮学习乐园</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary-color: #FF6B6B;
+      --secondary-color: #4ECDC4;
+      --accent-color: #FFE66D;
+      --purple: #A66CFF;
+      --blue: #6BCBFF;
+      --green: #69F0AE;
+      --orange: #FFB347;
+    }
+
+    body {
+      font-family: 'Comic Sans MS', ' cursive', sans-serif;
+      background: linear-gradient(135deg, #FFE3E3 0%, #E3F2FD 50%, #F3E5F5 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .header {
+      text-align: center;
+      padding: 20px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      background: linear-gradient(90deg, var(--primary-color), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header .subtitle {
+      color: #888;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    .screen {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .user-select {
+      text-align: center;
+    }
+
+    .user-select h2 {
+      color: #555;
+      margin-bottom: 30px;
+      font-size: 24px;
+    }
+
+    .user-cards {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .user-card {
+      width: 150px;
+      padding: 30px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 4px solid transparent;
+    }
+
+    .user-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    }
+
+    .user-card.dundun {
+      background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
+      border-color: var(--blue);
+    }
+
+    .user-card.zhuangzhuang {
+      background: linear-gradient(135deg, #FCE4EC, #F8BBD9);
+      border-color: var(--primary-color);
+    }
+
+    .user-avatar {
+      font-size: 60px;
+      margin-bottom: 10px;
+    }
+
+    .user-name {
+      font-size: 20px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    .subject-select h2 {
+      text-align: center;
+      color: #555;
+      margin-bottom: 30px;
+      font-size: 24px;
+    }
+
+    .subject-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .subject-btn {
+      padding: 25px 15px;
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: bold;
+      color: white;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .subject-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    .subject-btn.chinese { background: linear-gradient(135deg, #FF6B6B, #EE5A5A); }
+    .subject-btn.math { background: linear-gradient(135deg, #4ECDC4, #3DBDB5); }
+    .subject-btn.english { background: linear-gradient(135deg, #A66CFF, #9055EE); }
+    .subject-btn.geography { background: linear-gradient(135deg, #FFB347, #FFA030); }
+
+    .subject-icon {
+      font-size: 40px;
+    }
+
+    .game-screen {
+      text-align: center;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 10px;
+      background: #eee;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--green), var(--secondary-color));
+      border-radius: 10px;
+      transition: width 0.3s ease;
+    }
+
+    .question-card {
+      background: white;
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .question-number {
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 10px;
+    }
+
+    .question-text {
+      font-size: 22px;
+      color: #333;
+      margin-bottom: 20px;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .options-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .option-btn {
+      padding: 18px;
+      border: 3px solid #eee;
+      border-radius: 15px;
+      background: white;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .option-btn:hover {
+      border-color: var(--secondary-color);
+      background: #F0FDFC;
+    }
+
+    .option-btn.selected {
+      border-color: var(--secondary-color);
+      background: #E6FFFA;
+    }
+
+    .option-btn.correct {
+      border-color: var(--green);
+      background: #E8F5E9;
+    }
+
+    .option-btn.wrong {
+      border-color: var(--primary-color);
+      background: #FFEBEE;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 18px;
+      border: none;
+      border-radius: 15px;
+      background: linear-gradient(90deg, var(--primary-color), var(--purple));
+      color: white;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .submit-btn:hover {
+      transform: scale(1.02);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    .submit-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .result-screen {
+      text-align: center;
+    }
+
+    .score-display {
+      font-size: 80px;
+      font-weight: bold;
+      background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .score-label {
+      font-size: 20px;
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .result-emoji {
+      font-size: 80px;
+      margin: 20px 0;
+    }
+
+    .result-message {
+      font-size: 18px;
+      color: #666;
+      margin-bottom: 30px;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+    }
+
+    .action-btn {
+      flex: 1;
+      padding: 15px;
+      border: none;
+      border-radius: 15px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .action-btn.primary {
+      background: linear-gradient(90deg, var(--secondary-color), var(--green));
+      color: white;
+    }
+
+    .action-btn.secondary {
+      background: #eee;
+      color: #666;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 10px 20px;
+      background: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .stats-card {
+      background: #F8F9FA;
+      border-radius: 15px;
+      padding: 15px;
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    .stats-title {
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 10px;
+    }
+
+    .stats-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .stats-item:last-child {
+      border-bottom: none;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 20px;
+      color: #888;
+      font-size: 12px;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 10px;
+      }
+      
+      .header h1 {
+        font-size: 22px;
+      }
+      
+      .user-card {
+        width: 120px;
+        padding: 20px 15px;
+      }
+      
+      .user-avatar {
+        font-size: 45px;
+      }
+      
+      .subject-btn {
+        padding: 20px 10px;
+      }
+      
+      .subject-icon {
+        font-size: 30px;
+      }
+      
+      .question-text {
+        font-size: 18px;
+      }
+      
+      .option-btn {
+        padding: 15px;
+        font-size: 16px;
+      }
+    }
+
+    .bubble {
+      position: fixed;
+      pointer-events: none;
+      animation: floatUp 1s ease forwards;
+      font-size: 30px;
+      z-index: 100;
+    }
+
+    @keyframes floatUp {
+      0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-100px) scale(1.5);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🌟 敦敦壮壮学习乐园 🌟</h1>
+      <p class="subtitle">快来和敦敦壮壮一起学习吧！</p>
+    </div>
+
+    <!-- 用户选择界面 -->
+    <div class="screen active" id="user-screen">
+      <div class="card user-select">
+        <h2>👶 请选择小朋友</h2>
+        <div class="user-cards">
+          <div class="user-card dundun" onclick="selectUser('dundun')">
+            <div class="user-avatar">🐻</div>
+            <div class="user-name">敦敦</div>
+          </div>
+          <div class="user-card zhuangzhuang" onclick="selectUser('zhuangzhuang')">
+            <div class="user-avatar">🦁</div>
+            <div class="user-name">壮壮</div>
+          </div>
+        </div>
+      </div>
+      <div class="stats-card" id="user-stats"></div>
+    </div>
+
+    <!-- 科目选择界面 -->
+    <div class="screen" id="subject-screen">
+      <button class="back-btn" onclick="goBack()">← 返回</button>
+      <div class="card subject-select">
+        <h2>📚 请选择科目</h2>
+        <div class="subject-grid">
+          <button class="subject-btn chinese" onclick="startGame('chinese')">
+            <span class="subject-icon">📖</span>
+            <span>语文</span>
+          </button>
+          <button class="subject-btn math" onclick="startGame('math')">
+            <span class="subject-icon">🔢</span>
+            <span>数学</span>
+          </button>
+          <button class="subject-btn english" onclick="startGame('english')">
+            <span class="subject-icon">🔤</span>
+            <span>英语</span>
+          </button>
+          <button class="subject-btn geography" onclick="startGame('geography')">
+            <span class="subject-icon">🌍</span>
+            <span>地理</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 游戏界面 -->
+    <div class="screen" id="game-screen">
+      <button class="back-btn" onclick="quitGame()">← 退出</button>
+      <div class="card game-screen">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        
+        <div class="question-card">
+          <div class="question-number" id="question-number">第 1 / 5 题</div>
+          <div class="question-text" id="question-text"></div>
+          <div class="options-grid" id="options-grid"></div>
+        </div>
+
+        <button class="submit-btn" id="submit-btn" onclick="submitAnswer()" disabled>下一题 →</button>
+      </div>
+    </div>
+
+    <!-- 结果界面 -->
+    <div class="screen" id="result-screen">
+      <div class="card result-screen">
+        <div class="result-emoji" id="result-emoji">🎉</div>
+        <div class="score-label">得分</div>
+        <div class="score-display" id="score-display">0</div>
+        <div class="result-message" id="result-message"></div>
+        
+        <div class="action-buttons">
+          <button class="action-btn secondary" onclick="restartGame()">🔄 重新答题</button>
+          <button class="action-btn primary" onclick="changeSubject()">📚 换科目</button>
+        </div>
+        
+        <div class="action-buttons" style="margin-top: 10px;">
+          <button class="action-btn secondary" onclick="goToUserSelect()" style="flex:1">👈 换小朋友</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      爸爸妈妈爱你 ❤️
+    </div>
+  </div>
+
+  <script>
+    let currentUser = null;
+    let currentSubject = null;
+    let questions = [];
+    let currentQuestionIndex = 0;
+    let answers = [];
+    let selectedOption = null;
+
+    const chineseQuestions = [
+      { question: "床前明月光，_____", answer: "疑是地上霜", options: ["疑是地上霜", "举头望明月", "低头思故乡"] },
+      { question: "春眠不觉晓，_____", answer: "处处闻啼鸟", options: ["处处闻啼鸟", "花落知多少", "夜来风雨声"] },
+      { question: "红豆生南国，_____", answer: "春来发几枝", options: ["春来发几枝", "愿君多采撷", "此物最相思"] },
+      { question: "离离原上草，_____", answer: "一岁一枯荣", options: ["一岁一枯荣", "野火烧不尽", "春风吹又生"] },
+      { question: "白日依山尽，_____", answer: "黄河入海流", options: ["黄河入海流", "海上明月生", "唯见长江天际流"] },
+      { question: "锄禾日当午，_____", answer: "汗滴禾下土", options: ["汗滴禾下土", "谁知盘中餐", "粒粒皆辛苦"] },
+      { question: "千山鸟飞绝，_____", answer: "万径人踪灭", options: ["万径人踪灭", "孤舟蓑笠翁", "独钓寒江雪"] },
+      { question: "少小离家老大回，_____", answer: "乡音无改鬓毛衰", options: ["乡音无改鬓毛衰", "笑问客从何处来", "儿童相见不相识"] },
+      { question: "小荷才露尖尖角，_____", answer: "早有蜻蜓立上头", options: ["早有蜻蜓立上头", "接天莲叶无穷碧", "映日荷花别样红"] },
+      { question: "朝辞白帝彩云间，_____", answer: "千里江陵一日还", options: ["千里江陵一日还", "两岸猿声啼不住", "轻舟已过万重山"] },
+      { question: "日照香炉生紫烟，_____", answer: "遥看瀑布挂前川", options: ["遥看瀑布挂前川", "飞流直下三千尺", "疑是银河落九天"] },
+      { question: "两个黄鹂鸣翠柳，_____", answer: "一行白鹭上青天", options: ["一行白鹭上青天", "窗含西岭千秋雪", "门泊东吴万里船"] },
+      { question: "空山不见人，_____", answer: "但闻人语响", options: ["但闻人语响", "返景入深林", "复照青苔上"] },
+      { question: "好雨知时节，_____", answer: "当春乃发生", options: ["当春乃发生", "润物细无声", "随风潜入夜"] },
+      { question: "独在异乡为异客，_____", answer: "每逢佳节倍思亲", options: ["每逢佳节倍思亲", "遥知兄弟登高处", "遍插茱萸少一人"] }
+    ];
+
+    const geographyQuestions = [
+      { type: "flag", question: "这是哪个国家的国旗？🇨🇳", answer: "中国", options: ["中国", "日本", "韩国"] },
+      { type: "flag", question: "这是哪个国家的国旗？🇺🇸", answer: "美国", options: ["美国", "英国", "加拿大"] },
+      { type: "flag", question: "这是哪个国家的国旗？🇯🇵", answer: "日本", options: ["日本", "韩国", "中国"] },
+      { type: "flag", question: "这是哪个国家的国旗？🇬🇧", answer: "英国", options: ["英国", "美国", "澳大利亚"] },
+      { type: "flag", question: "这是哪个国家的国旗？🇫🇷", answer: "法国", options: ["法国", "意大利", "德国"] },
+      { type: "flag", question: "这是哪个国家的国旗？🇩🇪", answer: "德国", options: ["德国", "法国", "意大利"] },
+      { type: "flag", question: "这是哪个国家的国旗？🇰🇷", answer: "韩国", options: ["韩国", "朝鲜", "日本"] },
+      { type: "flag", question: "这是哪个国家的国旗？🇦🇺", answer: "澳大利亚", options: ["澳大利亚", "新西兰", "英国"] },
+      { type: "country", question: "🇷🇺 这是哪个国家？", answer: "俄罗斯", options: ["俄罗斯", "乌克兰", "波兰"] },
+      { type: "country", question: "🇮🇹 这是哪个国家？", answer: "意大利", options: ["意大利", "西班牙", "希腊"] },
+      { type: "country", question: "🇹🇭 这是哪个国家？", answer: "泰国", options: ["泰国", "越南", "缅甸"] },
+      { type: "country", question: "🇵🇭 这是哪个国家？", answer: "菲律宾", options: ["菲律宾", "印度尼西亚", "马来西亚"] }
+    ];
+
+    const englishWords = [
+      { word: "🐶", answer: "dog", options: ["dog", "cat", "pig"], display: "dog" },
+      { word: "🐱", answer: "cat", options: ["cat", "dog", "mouse"], display: "cat" },
+      { word: "🍎", answer: "apple", options: ["apple", "orange", "banana"], display: "apple" },
+      { word: "🍊", answer: "orange", options: ["orange", "apple", "grape"], display: "orange" },
+      { word: "🔴", answer: "red", options: ["red", "blue", "green"], display: "red" },
+      { word: "🔵", answer: "blue", options: ["blue", "red", "yellow"], display: "blue" },
+      { word: "🟢", answer: "green", options: ["green", "yellow", "red"], display: "green" },
+      { word: "🐰", answer: "rabbit", options: ["rabbit", "bear", "panda"], display: "rabbit" },
+      { word: "🐼", answer: "panda", options: ["panda", "bear", "tiger"], display: "panda" },
+      { word: "🦁", answer: "lion", options: ["lion", "tiger", "elephant"], display: "lion" },
+      { word: "🐘", answer: "elephant", options: ["elephant", "lion", "monkey"], display: "elephant" },
+      { word: "🐒", answer: "monkey", options: ["monkey", "dog", "cat"], display: "monkey" },
+      { word: "🍌", answer: "banana", options: ["banana", "apple", "grape"], display: "banana" },
+      { word: "🍇", answer: "grape", options: ["grape", "banana", "orange"], display: "grape" },
+      { word: "⭐", answer: "star", options: ["star", "moon", "sun"], display: "star" },
+      { word: "☀️", answer: "sun", options: ["sun", "moon", "star"], display: "sun" }
+    ];
+
+    function generateMathQuestion() {
+      const operators = ['+', '-'];
+      const operator = operators[Math.floor(Math.random() * operators.length)];
+      let a, b, answer;
+      
+      if (operator === '+') {
+        a = Math.floor(Math.random() * 10);
+        b = Math.floor(Math.random() * (10 - a));
+        answer = a + b;
+      } else {
+        a = Math.floor(Math.random() * 10) + 1;
+        b = Math.floor(Math.random() * a);
+        answer = a - b;
+      }
+      
+      const wrongAnswers = new Set();
+      while (wrongAnswers.size < 2) {
+        const wrong = answer + Math.floor(Math.random() * 5) - 2;
+        if (wrong !== answer && wrong >= 0 && wrong <= 10) {
+          wrongAnswers.add(wrong);
+        }
+      }
+      
+      const options = [...wrongAnswers, answer].sort(() => Math.random() - 0.5);
+      
+      return {
+        question: `${a} ${operator === '+' ? '+' : '-'} ${b} = ?`,
+        answer: answer.toString(),
+        options: options.map(String)
+      };
+    }
+
+    function getUserData() {
+      const data = localStorage.getItem('kids_learning_data');
+      return data ? JSON.parse(data) : {};
+    }
+
+    function saveUserData(data) {
+      localStorage.setItem('kids_learning_data', JSON.stringify(data));
+    }
+
+    function getUserStats(user) {
+      const data = getUserData();
+      return data[user] || { total: 0, correct: 0, wrong: {} };
+    }
+
+    function updateUserStats(user, subject, score) {
+      const data = getUserData();
+      if (!data[user]) {
+        data[user] = { total: 0, correct: 0, wrong: {} };
+      }
+      data[user].total += 5;
+      data[user].correct += score;
+      if (!data[user].wrong[subject]) {
+        data[user].wrong[subject] = [];
+      }
+      saveUserData(data);
+    }
+
+    function updateWrongQuestions(user, subject, question, isCorrect) {
+      const data = getUserData();
+      if (!data[user]) {
+        data[user] = { total: 0, correct: 0, wrong: {} };
+      }
+      if (!data[user].wrong) {
+        data[user].wrong = {};
+      }
+      if (!data[user].wrong[subject]) {
+        data[user].wrong[subject] = [];
+      }
+      
+      const wrongList = data[user].wrong[subject];
+      const qKey = question.question + '|' + question.answer;
+      const existingIndex = wrongList.findIndex(q => q.question + '|' + q.answer === qKey);
+      
+      if (isCorrect) {
+        if (existingIndex !== -1) {
+          wrongList[existingIndex].correctCount = (wrongList[existingIndex].correctCount || 0) + 1;
+          if (wrongList[existingIndex].correctCount >= 3) {
+            wrongList.splice(existingIndex, 1);
+          }
+        }
+      } else {
+        if (existingIndex === -1) {
+          wrongList.push({ ...question, correctCount: 0 });
+        }
+      }
+      
+      saveUserData(data);
+    }
+
+    function showUserStats() {
+      const statsDiv = document.getElementById('user-stats');
+      const stats = getUserStats(currentUser);
+      const chineseWrong = stats.wrong?.chinese?.length || 0;
+      const mathWrong = stats.wrong?.math?.length || 0;
+      const englishWrong = stats.wrong?.english?.length || 0;
+      const geographyWrong = stats.wrong?.geography?.length || 0;
+      
+      statsDiv.innerHTML = `
+        <div class="stats-title">📊 ${currentUser === 'dundun' ? '敦敦' : '壮壮'}的学习记录</div>
+        <div class="stats-item">
+          <span>总答题数</span>
+          <span>${stats.total || 0} 题</span>
+        </div>
+        <div class="stats-item">
+          <span>正确数</span>
+          <span>${stats.correct || 0} 题</span>
+        </div>
+        <div class="stats-item">
+          <span>错题待复习</span>
+          <span>语文${chineseWrong} 数学${mathWrong} 英语${englishWrong} 地理${geographyWrong}</span>
+        </div>
+      `;
+    }
+
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(screenId).classList.add('active');
+    }
+
+    function selectUser(user) {
+      currentUser = user;
+      showScreen('subject-screen');
+    }
+
+    function goBack() {
+      showScreen('user-screen');
+      showUserStats();
+    }
+
+    function getRandomQuestions(type, count) {
+      let pool = [];
+      
+      if (type === 'chinese') {
+        pool = [...chineseQuestions];
+      } else if (type === 'math') {
+        for (let i = 0; i < 50; i++) {
+          pool.push(generateMathQuestion());
+        }
+      } else if (type === 'english') {
+        pool = [...englishWords];
+      } else if (type === 'geography') {
+        pool = [...geographyQuestions];
+      }
+      
+      return pool.sort(() => Math.random() - 0.5).slice(0, count);
+    }
+
+    function getMixedQuestions(type, count) {
+      const data = getUserData();
+      const wrongKey = `wrong_${type}`;
+      const wrongQuestions = data[currentUser]?.wrong?.[type] || [];
+      
+      const now = Date.now();
+      const reviewableWrong = wrongQuestions.filter(q => {
+        const daysSinceError = (now - (q.lastError || now)) / (1000 * 60 * 60 * 24);
+        return daysSinceError >= 1;
+      });
+      
+      let result = [];
+      
+      if (reviewableWrong.length > 0) {
+        const reviewCount = Math.min(reviewableWrong.length, Math.ceil(count / 2));
+        result = reviewableWrong.sort(() => Math.random() - 0.5).slice(0, reviewCount);
+      }
+      
+      const remaining = count - result.length;
+      if (remaining > 0) {
+        const newQuestions = getRandomQuestions(type, remaining);
+        result = [...result, ...newQuestions];
+      }
+      
+      return result.sort(() => Math.random() - 0.5);
+    }
+
+    function startGame(subject) {
+      currentSubject = subject;
+      questions = getMixedQuestions(subject, 5);
+      currentQuestionIndex = 0;
+      answers = [];
+      showScreen('game-screen');
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const q = questions[currentQuestionIndex];
+      
+      document.getElementById('question-number').textContent = `第 ${currentQuestionIndex + 1} / ${questions.length} 题`;
+      
+      let questionText = q.question;
+      if (currentSubject === 'english') {
+        questionText = `${q.word} 这个图片的英语单词是什么？`;
+      }
+      document.getElementById('question-text').textContent = questionText;
+      
+      const optionsGrid = document.getElementById('options-grid');
+      optionsGrid.innerHTML = '';
+      
+      q.options.forEach((opt, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = opt;
+        btn.onclick = () => selectOption(index, opt);
+        optionsGrid.appendChild(btn);
+      });
+      
+      selectedOption = null;
+      document.getElementById('submit-btn').disabled = true;
+      document.getElementById('submit-btn').textContent = '下一题 →';
+      
+      const progress = ((currentQuestionIndex) / questions.length) * 100;
+      document.getElementById('progress-fill').style.width = progress + '%';
+    }
+
+    function selectOption(index, option) {
+      selectedOption = option;
+      document.querySelectorAll('.option-btn').forEach((btn, i) => {
+        btn.classList.remove('selected');
+        if (i === index) btn.classList.add('selected');
+      });
+      document.getElementById('submit-btn').disabled = false;
+    }
+
+    function submitAnswer() {
+      const q = questions[currentQuestionIndex];
+      const isCorrect = selectedOption === q.answer;
+      
+      answers.push({
+        question: q,
+        answer: selectedOption,
+        correct: isCorrect
+      });
+      
+      document.querySelectorAll('.option-btn').forEach(btn => {
+        btn.disabled = true;
+        if (btn.textContent === q.answer) {
+          btn.classList.add('correct');
+        } else if (btn.textContent === selectedOption && !isCorrect) {
+          btn.classList.add('wrong');
+        }
+      });
+      
+      updateWrongQuestions(currentUser, currentSubject, q, isCorrect);
+      
+      if (isCorrect) {
+        showBubble('⭐');
+      } else {
+        showBubble('💪');
+      }
+      
+      const submitBtn = document.getElementById('submit-btn');
+      
+      if (currentQuestionIndex < questions.length - 1) {
+        submitBtn.textContent = '下一题 →';
+        setTimeout(() => {
+          currentQuestionIndex++;
+          renderQuestion();
+        }, 800);
+      } else {
+        submitBtn.textContent = '查看结果 📋';
+        submitBtn.onclick = showResult;
+        submitBtn.disabled = false;
+      }
+    }
+
+    function showBubble(emoji) {
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble';
+      bubble.textContent = emoji;
+      bubble.style.left = Math.random() * 60 + 20 + '%';
+      bubble.style.top = '50%';
+      document.body.appendChild(bubble);
+      setTimeout(() => bubble.remove(), 1000);
+    }
+
+    function showResult() {
+      const score = answers.filter(a => a.correct).length;
+      updateUserStats(currentUser, currentSubject, score);
+      
+      document.getElementById('score-display').textContent = score;
+      
+      const emoji = score === 5 ? '🏆' : score >= 3 ? '🌟' : '💪';
+      document.getElementById('result-emoji').textContent = emoji;
+      
+      const messages = [
+        '再接再厉，下次会更好！',
+        '不错哦，继续加油！',
+        '很棒啦！',
+        '太厉害了！全对！'
+      ];
+      document.getElementById('result-message').textContent = messages[Math.floor(score * messages.length / 5)];
+      
+      showScreen('result-screen');
+    }
+
+    function restartGame() {
+      document.getElementById('submit-btn').onclick = submitAnswer;
+      startGame(currentSubject);
+    }
+
+    function changeSubject() {
+      document.getElementById('submit-btn').onclick = submitAnswer;
+      showScreen('subject-screen');
+    }
+
+    function goToUserSelect() {
+      document.getElementById('submit-btn').onclick = submitAnswer;
+      showScreen('user-screen');
+      showUserStats();
+    }
+
+    function quitGame() {
+      showScreen('user-screen');
+      showUserStats();
+    }
+
+    showUserStats();
+  </script>
+</body>
+</html>
